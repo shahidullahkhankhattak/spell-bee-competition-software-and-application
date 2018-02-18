@@ -1,0 +1,132 @@
+<html>
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=ibm866">
+    <title>Horizon - Spell Bee</title>
+    
+    <meta name="viewport" conntent="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/materialize.min.css">
+    <link rel="stylesheet" href="./css/custom.css">
+    <link href="./css/icon.css" rel="stylesheet">
+    <style>
+    	.slidefade-enter-active, .slidefade-leave-active {
+		  transition: all 0.5s ease;
+		}
+		.slidefade-enter, .slidefade-leave-to {
+		  transform: translateY(-150px);
+		  position:fixed;
+		  width:70%;
+		  opacity: 0;
+		}
+    </style>
+  </head>
+  <body>
+    <div  id="typing-application">
+      <div id="modal1" class="modal">
+          <div class="modal-content">
+            <h4 id="modal-header">Modal Header</h4>
+            <p id="modal-body">A bunch of text</p>
+          </div>
+          <div class="modal-footer" id="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>
+          </div>
+      </div>
+      <audio>
+      	<source src="./buzzer.mp3" type="audio/mp3">
+      </audio>
+         <div>
+         	<audio id="buzzer">
+         		<source src="./buzzer.mp3" type="">
+         	</audio>
+	        <nav>
+	          <div class="nav-wrapper blue darken-3">
+	            <a href="#" class="brand-logo center">Horizon Spell Bee</a>
+	          </div>
+	        </nav>
+	        <div class="container">
+	          <transition name="slidefade" mode="out-in">
+	          <div class="typing-test" v-if="!resultannounced">
+	            <div :class="remaining_time > 9 ? 'card blue-grey darken-1 full-width' : 'card blue-grey darken-1 full-width blink'">
+	              <div class="card-content white-text" align="center">
+	                <p style="font-size:18px;margin-bottom:20px;">Time Remaining</p>
+	                <span class="card-title txt-capitalize">
+	                  <div :class="remaining_time > 9 ? 'clock': 'clock'">
+	                    {{(Math.floor(remaining_time/60).toFixed())}}:{{pad(remaining_time % 60)}}
+	                  </div>
+	                </span>
+	              </div>
+	            </div>
+	            <div :class="'card '+(status == 'normal' ? 'blue-grey darken-1' : status == 'right' ? 'green darken-1' : 'red darken-1')+' full-width'">
+	              <div class="card-content white-text" align="center">
+	                <p style="font-size:18px;margin-bottom:20px;">Current Status</p>
+	                <span class="card-title txt-capitalize">
+	                  <div>
+	                  	<b style="font-size:30px;margin-top:-15px;">
+	                    {{(status == 'normal' ? '-' : status == 'right' ? 'Correct!' : 'Wrong!')}}
+	                	</b>
+	                    <br><br>
+	                    <span v-if="status=='wrong'">Correct Spelling: </span>
+	                    <span v-if="status=='wrong'"><b>{{correctspelling}}</b></span>
+	                  </div>
+	                </span>
+	              </div>
+	            </div>
+	            <div>
+	            	<div class='row' align="center">
+	            		<div class="col s12 m4">
+	            			<button class="btn" @click="status='right'; right += 1; init()">
+	            				<i class="material-icons left">check_circle</i>
+	            			Right</button>
+	            		</div>
+	            		<div class="col s12 m4">
+	            			<button class="btn" v-if="!play" @click="status='normal'; init()">
+	            				<i class="material-icons left">&#xE038;</i>
+	            			Start</button>
+	            			<button class="btn" v-else @click="init()">
+	            				<i class="material-icons left">&#xE035;</i>
+	            			Pause
+	            			</button>
+	            		</div>
+	            		<div class="col s12 m4">
+	            			<button class="btn" @click="status='wrong'; wrong += 1; init()">
+	            				<i class="material-icons left">&#xE5C9;</i>
+	            			Wrong</button>
+	            		</div>
+	            	</div>
+	            </div>
+	            <input  type="text" placeholder="Enter Word S.No and hit enter to start" v-model="currentWord" class="typed-words" 
+	            v-on:keyup.enter="status='normal'; init()"
+	            autofocus>
+	          </div>
+	      	</transition>
+	      	<transition name="slidefade" mode="out-in">
+	      	<div class="typing-test" v-if="resultannounced">
+	          	<div align="center">
+	          		<br>
+	          	<button class="btn" @click="reload()">
+	            				<i class="material-icons left">&#xE863;</i>
+	            Restart</button>
+	           </div>
+	          	<div class="card blue-grey darken-1 full-width">
+	              <div class="card-content white-text" align="center">
+	                <p style="font-size:18px;margin-bottom:20px;">Results</p>
+	                <span class="card-title txt-capitalize">
+	                  <div>
+	                  	Correct Words: {{right}}<br>
+	                  	Incorrect Words: {{wrong}}
+	                  </div>
+	                </span>
+	              </div>
+	            </div>
+	          </div>
+	          </transition>
+	        </div>
+	      </div>
+    </div>
+  </body>
+  <script src="./js/jquery.js"></script>
+  <script type="text/javascript" src="./js/materialize.min.js"></script>
+  <script type="text/javascript" src="js/vue.js"></script>
+  <script type="text/javascript" src="js/vue-router.js"></script>
+  <script type="text/javascript" src="js/vue-http.js"></script>
+  <script type="text/javascript" src="js/process.js"></script>
+</html>
